@@ -27,6 +27,7 @@ import info.fcrp.keepitsafe.model.Keep;
 import info.fcrp.keepitsafe.model.Secret;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,7 @@ public class SecretService {
 	}
 
 	@RequestMapping(value = "/secret/{id}", method = RequestMethod.GET)
+	@PreAuthorize("hasPermission(#id,'commoner')")
 	public @ResponseBody
 	Secret findById(@PathVariable long id) {
 		Secret secret = secretDAO.find(id);
