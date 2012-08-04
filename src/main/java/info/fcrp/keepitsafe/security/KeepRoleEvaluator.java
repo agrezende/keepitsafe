@@ -20,31 +20,77 @@
 package info.fcrp.keepitsafe.security;
 
 import info.fcrp.keepitsafe.dao.KeepDAO;
+import info.fcrp.keepitsafe.dao.RoleMapDAO;
+import info.fcrp.keepitsafe.model.Keep;
+import info.fcrp.keepitsafe.model.RoleMap;
+import info.fcrp.keepitsafe.model.Secret;
 
 import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 
 public class KeepRoleEvaluator implements PermissionEvaluator {
     @Autowired
-    private KeepDAO keepDAO;
+    private RoleMapDAO roleMapDAO;
 
     public boolean hasPermission(Authentication authentication,
             Object targetDomainObject, Object permission) {
 
         if (targetDomainObject == null) {
             return false;
-        } 
-        
-      
+        }
+
         return true;
     }
 
     public boolean hasPermission(Authentication authentication,
             Serializable targetId, String targetType, Object permission) {
-        // TODO Auto-generated method stub
+
+        RoleMap roleMap = null;
+        if (targetId != null) {
+            if ("info.fcrp.keepitsafe.model.Secret".equals(targetType)) {
+                roleMap = roleMapDAO.findBySecretId((Long) targetId);
+            } else if (Keep.class.getName().equals(targetType)) {
+                roleMap = roleMapDAO.findByKeepId((Long) targetId);
+            }
+        }
+
+        if (roleMap != null) {
+            return checkRole(roleMap, authentication, permission);
+        }
+
+        return false;
+
+    }
+
+    private boolean checkRole(RoleMap roleMap, Authentication authentication,
+            Object permission) {
+
+        String[] roles = null;
+        if ("king".equals(permission)) {
+            if (roleMap.getKing() != null) {
+                roles = roleMap.getKing().split(";");
+            }
+        } else if ("commoner".equals(permission)) {
+            if (roleMap.getCommoner() != null) {
+                roles = roleMap.getCommoner().split(";");
+            }
+        }
+
+        for (String role : roles) {
+            if (role.startsWith("user:")) {
+                User user = (User) authentication.getPrincipal();
+                if(role.replaceFirst("user:", "").equals(user.getUsername())) {
+                    return true;
+                }
+            } else if (authentication.getAuthorities().contains(role)) {
+                return true;
+            }
+        }
+
         return false;
     }
 

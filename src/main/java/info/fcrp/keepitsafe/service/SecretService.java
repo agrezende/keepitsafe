@@ -39,54 +39,54 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Transactional
 public class SecretService {
-	@Autowired
-	private SecretDAO secretDAO;
+    @Autowired
+    private SecretDAO secretDAO;
 
-	@Autowired
-	private KeepDAO keepDAO;
+    @Autowired
+    private KeepDAO keepDAO;
 
-	@RequestMapping(value = "/keep/{keepId}/secret", method = RequestMethod.GET)
-	public @ResponseBody
-	List<Secret> findByKeepId(@PathVariable long keepId) {
-		List<Secret> secrets = secretDAO.findByKeepId(keepId);
-		return secrets;
-	}
+    @RequestMapping(value = "/keep/{keepId}/secret", method = RequestMethod.GET)
+    public @ResponseBody
+    List<Secret> findByKeepId(@PathVariable long keepId) {
+        List<Secret> secrets = secretDAO.findByKeepId(keepId);
+        return secrets;
+    }
 
-	@RequestMapping(value = "/secret/{id}", method = RequestMethod.GET)
-	@PreAuthorize("hasPermission(#id,'commoner')")
-	public @ResponseBody
-	Secret findById(@PathVariable long id) {
-		Secret secret = secretDAO.find(id);
-		return secret;
-	}
+    @RequestMapping(value = "/secret/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(#id,'info.fcrp.keepitsafe.model.Secret','king')")
+    public @ResponseBody
+    Secret findById(@PathVariable long id) {
+        Secret secret = secretDAO.find(id);
+        return secret;
+    }
 
-	@RequestMapping(value = "/keep/{keepId}/secret", method = RequestMethod.POST)
-	public @ResponseBody
-	Secret create(@PathVariable long keepId, @RequestBody Secret secret) {
-		Keep keep = keepDAO.find(keepId);
-		secret.setKeep(keep);
-		secretDAO.save(secret);
-		return secret;
-	}
+    @RequestMapping(value = "/keep/{keepId}/secret", method = RequestMethod.POST)
+    public @ResponseBody
+    Secret create(@PathVariable long keepId, @RequestBody Secret secret) {
+        Keep keep = keepDAO.find(keepId);
+        secret.setKeep(keep);
+        secretDAO.save(secret);
+        return secret;
+    }
 
-	@RequestMapping(value = "/secret/{id}", method = RequestMethod.PUT)
-	public @ResponseBody
-	Secret update(@PathVariable long id, @RequestBody Secret secret) {
-		Secret curSecret = secretDAO.find(id);
-		if (curSecret != null) {
-			curSecret.setName(secret.getName());
-			curSecret.setLogin(secret.getLogin());
-			curSecret.setDescription(secret.getDescription());
-			curSecret.setPassword(secret.getPassword());
-			secretDAO.save(curSecret);
-		}
-		return curSecret;
-	}
+    @RequestMapping(value = "/secret/{id}", method = RequestMethod.PUT)
+    public @ResponseBody
+    Secret update(@PathVariable long id, @RequestBody Secret secret) {
+        Secret curSecret = secretDAO.find(id);
+        if (curSecret != null) {
+            curSecret.setName(secret.getName());
+            curSecret.setLogin(secret.getLogin());
+            curSecret.setDescription(secret.getDescription());
+            curSecret.setPassword(secret.getPassword());
+            secretDAO.save(curSecret);
+        }
+        return curSecret;
+    }
 
-	@RequestMapping(value = "/secret/{id}", method = RequestMethod.DELETE)
-	public void remove(@PathVariable long id) {
-		Secret secret = secretDAO.find(id);
-		secretDAO.delete(secret);
-	}
+    @RequestMapping(value = "/secret/{id}", method = RequestMethod.DELETE)
+    public void remove(@PathVariable long id) {
+        Secret secret = secretDAO.find(id);
+        secretDAO.delete(secret);
+    }
 
 }

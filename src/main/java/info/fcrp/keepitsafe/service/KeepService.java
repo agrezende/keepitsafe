@@ -19,6 +19,7 @@
 
 package info.fcrp.keepitsafe.service;
 
+import java.security.Principal;
 import java.util.List;
 
 import info.fcrp.keepitsafe.dao.KeepDAO;
@@ -62,10 +63,12 @@ public class KeepService {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public @ResponseBody
-	Keep create(@RequestBody Keep keep) {
+	Keep create(@RequestBody Keep keep, Principal principal) {
 		for (Secret sc : keep.getSecrets()) {
 			sc.setKeep(keep);
 		}
+		keep.getRoleMap().setKing("user:" + principal.getName());
+		
 		keepDAO.save(keep);
 		return keep;
 	}

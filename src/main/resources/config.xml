@@ -35,6 +35,7 @@
 				<value>info.fcrp.keepitsafe.model.ModelObject</value>
 				<value>info.fcrp.keepitsafe.model.Secret</value>
 				<value>info.fcrp.keepitsafe.model.Keep</value>
+				<value>info.fcrp.keepitsafe.model.RoleMap</value>
 			</list>
 		</property>
 	</bean>
@@ -52,6 +53,10 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
+	<bean id="roleMapDAO" class="info.fcrp.keepitsafe.dao.RoleMapDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
 	<bean id="keepBean" class="info.fcrp.keepitsafe.bean.KeepBeanImpl">
 	</bean>
 
@@ -63,7 +68,7 @@
 
 	<bean id="secretService" class="info.fcrp.keepitsafe.service.SecretService">
 	</bean>
-	
+
 	<bean id="crypt" class="info.fcrp.keepitsafe.util.Crypt">
 		<property name="password" value="abc" />
 	</bean>
