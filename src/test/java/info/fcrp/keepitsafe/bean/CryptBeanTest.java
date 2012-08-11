@@ -20,6 +20,8 @@
 package info.fcrp.keepitsafe.bean;
 
 import static org.junit.Assert.*;
+import info.fcrp.keepitsafe.util.Crypt;
+
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyPair;
@@ -46,6 +48,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "/config.xml" })
 public class CryptBeanTest {
 
+    @Test
+    public void crypt() {
+        String plain = "plain";
+        String crypted = Crypt.crypt(plain);
+        String decrypted = Crypt.decrypt(crypted);
+        
+        assertEquals(plain, decrypted);
+    }
+    
 	@Test
 	public void assymetric() throws NoSuchAlgorithmException,
 			NoSuchProviderException, NoSuchPaddingException,

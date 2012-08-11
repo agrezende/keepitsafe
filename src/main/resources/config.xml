@@ -70,7 +70,7 @@
 	</bean>
 
 	<bean id="crypt" class="info.fcrp.keepitsafe.util.Crypt">
-		<property name="password" value="abc" />
+		<property name="password" value="1234567890123456" />
 	</bean>
 
 	<mvc:interceptors>
