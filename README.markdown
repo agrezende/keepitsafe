@@ -23,6 +23,7 @@ Top Features
 
 * Cryptography
   * PGP Encryption
+  * AES Encryption
 
 * Authentication and Authorisation
   * Role Based Access Controle (RBAC)
