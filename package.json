@@ -1,0 +1,28 @@
+{
+  "name": "keepitsafe",
+  "version": "1.0.0",
+  "description": "What is KeepItSafe? ===================",
+  "main": "index.html",
+  "dependencies": {
+    "angular": "^1.5.5",
+    "bootstrap": "^3.3.6",
+    "angular-route": "^1.5.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "less": "^2.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felipecrp/keepitsafe.git"
+  },
+  "author": "felipecrp",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/felipecrp/keepitsafe/issues"
+  },
+  "homepage": "https://github.com/felipecrp/keepitsafe"
+}
