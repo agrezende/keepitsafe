@@ -1,0 +1,17 @@
+<div class="keep-list">
+  <div class="keep" ng-repeat="keep in keepLstCtrl.keeps">
+    <div class="keep-content">
+      
+      <h1 class="keep-name">{{keep.name}}</h1>
+      
+      <p class="keep-description">{{keep.description}}</p>
+      
+      <div class="keep-ctrl">
+        <!-- <button class="flag"><span aria-hidden="true"></span></button>
+        <button class="share"><span aria-hidden="true"></span></button> -->
+        <a href="#/keep/{{keep.id}}" class="open"><span aria-hidden="true"></span></a>
+      </div>
+
+    </div>
+  </div>
+</div>
