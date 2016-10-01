@@ -17,15 +17,19 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
+package keepitsafe.bean;
 
-import info.fcrp.keepitsafe.model.Keep;
+import keepitsafe.model.Keep;
 
-public interface KeepDAO extends GenericDAO<Keep> {
+public interface KeepBean {
 
 	/**
-	 * Get password store by name
+	 * Create a new password store
 	 */
-	Keep findByName(String name);
+	Keep create(String string);
 
+	/**
+	 * Get a password store
+	 */
+	Keep get(String string);
 }

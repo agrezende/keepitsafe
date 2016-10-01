@@ -17,21 +17,35 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
+package keepitsafe.model;
 
-import java.util.List;
+import java.io.Serializable;
 
-import info.fcrp.keepitsafe.model.ModelObject;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
-public interface GenericDAO<OBJ extends ModelObject> {
+@MappedSuperclass
+public class ModelObject implements Serializable {
 
-	void save(OBJ object);
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-	void delete(OBJ object);
-	
-	void update(OBJ object);
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
 
-	OBJ find(long id);
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 
-	List<OBJ> findAll();
 }

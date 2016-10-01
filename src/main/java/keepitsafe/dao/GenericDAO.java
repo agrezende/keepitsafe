@@ -17,19 +17,21 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
+package keepitsafe.dao;
 
 import java.util.List;
 
-import info.fcrp.keepitsafe.model.Secret;
+import keepitsafe.model.ModelObject;
 
-public interface SecretDAO extends GenericDAO<Secret> {
+public interface GenericDAO<OBJ extends ModelObject> {
 
-	/**
-	 * Find all secrets from a keep
-	 * @param id the keep id
-	 * @return the list of secrets
-	 */
-	List<Secret> findByKeepId(long id);
+	void save(OBJ object);
 
+	void delete(OBJ object);
+	
+	void update(OBJ object);
+
+	OBJ find(long id);
+
+	List<OBJ> findAll();
 }

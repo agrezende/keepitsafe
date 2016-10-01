@@ -17,13 +17,13 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.security;
+package keepitsafe.security;
 
-import info.fcrp.keepitsafe.dao.KeepDAO;
-import info.fcrp.keepitsafe.dao.RoleMapDAO;
-import info.fcrp.keepitsafe.model.Keep;
-import info.fcrp.keepitsafe.model.RoleMap;
-import info.fcrp.keepitsafe.model.Secret;
+import keepitsafe.dao.KeepDAO;
+import keepitsafe.dao.RoleMapDAO;
+import keepitsafe.model.Keep;
+import keepitsafe.model.RoleMap;
+import keepitsafe.model.Secret;
 
 import java.io.Serializable;
 

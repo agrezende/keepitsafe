@@ -17,7 +17,7 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.model;
+package keepitsafe.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

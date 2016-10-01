@@ -17,7 +17,7 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.util;
+package keepitsafe.util;
 
 import static org.junit.Assert.assertNotSame;
 

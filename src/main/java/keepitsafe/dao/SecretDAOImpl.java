@@ -17,8 +17,18 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.bean;
+package keepitsafe.dao;
 
-public class CryptBeanImpl implements CryptBean {
+import java.util.List;
+
+import keepitsafe.model.Secret;
+
+public class SecretDAOImpl extends GenericDAOImpl<Secret> implements SecretDAO {
+
+	public List<Secret> findByKeepId(long id) {
+		@SuppressWarnings("unchecked")
+		List<Secret> list = getHibernateTemplate().findByNamedQueryAndNamedParam("secret.find.keepId", "keepId", id);
+		return list;
+	}
 
 }

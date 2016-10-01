@@ -17,11 +17,11 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
-
-import info.fcrp.keepitsafe.model.RoleMap;
+package keepitsafe.dao;
 
 import java.util.List;
+
+import keepitsafe.model.RoleMap;
 
 public class RoleMapDAOImpl extends GenericDAOImpl<RoleMap> implements
         RoleMapDAO {

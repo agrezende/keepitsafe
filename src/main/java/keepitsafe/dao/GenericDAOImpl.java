@@ -17,14 +17,14 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
+package keepitsafe.dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import info.fcrp.keepitsafe.model.ModelObject;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import keepitsafe.model.ModelObject;
 
 public abstract class GenericDAOImpl<OBJ extends ModelObject> extends
 		HibernateDaoSupport implements GenericDAO<OBJ> {

@@ -20,7 +20,6 @@
 package info.fcrp.keepitsafe.bean;
 
 import static org.junit.Assert.*;
-import info.fcrp.keepitsafe.util.Crypt;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -43,6 +42,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import keepitsafe.util.Crypt;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/config.xml" })

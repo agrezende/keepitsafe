@@ -17,15 +17,15 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.service;
+package keepitsafe.service;
 
 import java.security.Principal;
 import java.util.List;
 
-import info.fcrp.keepitsafe.dao.KeepDAO;
-import info.fcrp.keepitsafe.dao.SecretDAO;
-import info.fcrp.keepitsafe.model.Keep;
-import info.fcrp.keepitsafe.model.Secret;
+import keepitsafe.dao.KeepDAO;
+import keepitsafe.dao.SecretDAO;
+import keepitsafe.model.Keep;
+import keepitsafe.model.Secret;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

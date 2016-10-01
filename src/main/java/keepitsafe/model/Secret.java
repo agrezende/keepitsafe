@@ -17,51 +17,46 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.model;
+package keepitsafe.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 /**
- * A set of passwords
+ * A password. Nothing else ;)
  * 
  * @author felipecrp
  * 
  */
 @Entity
-public class Keep extends ModelObject {
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@NamedQueries({ @NamedQuery(name = "secret.find.keepId", query = "select sc from Secret sc where sc.keep.id = :keepId") })
+public class Secret extends ModelObject {
     @Column
     private String name;
 
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "keep", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    private List<Secret> secrets;
+    @Column
+    private String login;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    @JoinColumn
-    private RoleMap roleMap;
+    @Column
+    @Type(type = "info.fcrp.keepitsafe.model.PasswordType")
+    private String password;
 
-    public Keep() {
-        super();
-        this.secrets = new ArrayList<Secret>();
-        this.roleMap = new RoleMap();
-        roleMap.setKing("user:rod;teller");
-    }
-
-    public Keep(String name) {
-        this();
-        this.name = name;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Keep keep;
 
     /**
      * @return the name
@@ -79,18 +74,37 @@ public class Keep extends ModelObject {
     }
 
     /**
-     * @return the secrets
+     * @return the value
      */
-    public List<Secret> getSecrets() {
-        return secrets;
+
+    /**
+     * @return the keep
+     */
+    public Keep getKeep() {
+        return keep;
     }
 
     /**
-     * @param secrets
-     *            the secrets to set
+     * @param keep
+     *            the keep to set
      */
-    public void setSecrets(List<Secret> secrets) {
-        this.secrets = secrets;
+    public void setKeep(Keep keep) {
+        this.keep = keep;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password
+     *            the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -109,18 +123,18 @@ public class Keep extends ModelObject {
     }
 
     /**
-     * @return the roleMap
+     * @return the login
      */
-    public RoleMap getRoleMap() {
-        return roleMap;
+    public String getLogin() {
+        return login;
     }
 
     /**
-     * @param roleMap
-     *            the roleMap to set
+     * @param login
+     *            the login to set
      */
-    public void setRoleMap(RoleMap roleMap) {
-        this.roleMap = roleMap;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
 }

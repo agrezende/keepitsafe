@@ -17,13 +17,25 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.dao;
+package keepitsafe.dao;
 
-import info.fcrp.keepitsafe.model.RoleMap;
+import java.util.List;
 
-public interface RoleMapDAO extends GenericDAO<RoleMap> {
+import keepitsafe.model.Keep;
 
-    RoleMap findByKeepId(long keepId);
-    
-    RoleMap findBySecretId(long keepId);
+public class KeepDAOImpl extends GenericDAOImpl<Keep>
+		implements KeepDAO {
+
+	public Keep findByName(String name) {
+		@SuppressWarnings("unchecked")
+		List<Keep> list = getHibernateTemplate().find(
+				"select ps from PasswordStore ps where ps.name = ?", name);
+
+		if (list.size() > 0) {
+			return list.get(0);
+		} else {
+			return null;
+		}
+	}
+
 }

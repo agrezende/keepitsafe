@@ -1,12 +1,12 @@
-package info.fcrp.keepitsafe.model;
-
-import info.fcrp.keepitsafe.util.Crypt;
+package keepitsafe.model;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.hibernate.type.StringType;
+
+import keepitsafe.util.Crypt;
 
 public class PasswordType extends StringType {
     

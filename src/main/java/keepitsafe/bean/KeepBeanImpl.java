@@ -17,19 +17,27 @@
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package info.fcrp.keepitsafe.bean;
+package keepitsafe.bean;
 
-import info.fcrp.keepitsafe.model.Keep;
+import keepitsafe.dao.KeepDAO;
+import keepitsafe.model.Keep;
 
-public interface KeepBean {
+import org.springframework.beans.factory.annotation.Autowired;
 
-	/**
-	 * Create a new password store
-	 */
-	Keep create(String string);
+public class KeepBeanImpl implements KeepBean {
 
-	/**
-	 * Get a password store
-	 */
-	Keep get(String string);
+	@Autowired
+	KeepDAO passwordStoreDAO;
+
+	public Keep create(String name) {
+		
+		Keep ps = new Keep(name);
+		passwordStoreDAO.save(ps);
+		return ps;
+	}
+
+	public Keep get(String name) {
+		Keep ps = passwordStoreDAO.findByName(name);
+		return ps;
+	}
 }
