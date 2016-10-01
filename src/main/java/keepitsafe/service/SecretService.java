@@ -56,14 +56,14 @@ public class SecretService {
     @PreAuthorize("hasPermission(#id,'info.fcrp.keepitsafe.model.Secret','king')")
     public @ResponseBody
     Secret findById(@PathVariable long id) {
-        Secret secret = secretDAO.find(id);
+        Secret secret = secretDAO.findOne(id);
         return secret;
     }
 
     @RequestMapping(value = "/keep/{keepId}/secret", method = RequestMethod.POST)
     public @ResponseBody
     Secret create(@PathVariable long keepId, @RequestBody Secret secret) {
-        Keep keep = keepDAO.find(keepId);
+        Keep keep = keepDAO.findOne(keepId);
         secret.setKeep(keep);
         secretDAO.save(secret);
         return secret;
@@ -72,7 +72,7 @@ public class SecretService {
     @RequestMapping(value = "/secret/{id}", method = RequestMethod.PUT)
     public @ResponseBody
     Secret update(@PathVariable long id, @RequestBody Secret secret) {
-        Secret curSecret = secretDAO.find(id);
+        Secret curSecret = secretDAO.findOne(id);
         if (curSecret != null) {
             curSecret.setName(secret.getName());
             curSecret.setLogin(secret.getLogin());
@@ -85,7 +85,7 @@ public class SecretService {
 
     @RequestMapping(value = "/secret/{id}", method = RequestMethod.DELETE)
     public void remove(@PathVariable long id) {
-        Secret secret = secretDAO.find(id);
+        Secret secret = secretDAO.findOne(id);
         secretDAO.delete(secret);
     }
 

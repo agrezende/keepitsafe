@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Felipe C. do R. P.
+ * Copyright 2016
  *
  * This file is part of Keep It Safe.
  * 
@@ -38,9 +38,7 @@ import org.hibernate.annotations.TypeDef;
  * 
  */
 @Entity
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@NamedQueries({ @NamedQuery(name = "secret.find.keepId", query = "select sc from Secret sc where sc.keep.id = :keepId") })
-public class Secret extends ModelObject {
+public class Secret {
     @Column
     private String name;
 

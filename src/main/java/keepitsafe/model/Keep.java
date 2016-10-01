@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Felipe C. do R. P.
+ * Copyright 2016
  *
  * This file is part of Keep It Safe.
  * 
@@ -19,108 +19,86 @@
 
 package keepitsafe.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 /**
- * A set of passwords
- * 
- * @author felipecrp
- * 
+ * A keep is place where secrets can be shared with its members
  */
 @Entity
-public class Keep extends ModelObject {
-    @Column
-    private String name;
+public class Keep {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-    @Column
-    private String description;
+	@Column
+	private String name;
 
-    @OneToMany(mappedBy = "keep", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    private List<Secret> secrets;
+	@Column
+	private String description;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    @JoinColumn
-    private RoleMap roleMap;
+	@OneToMany(mappedBy = "keep", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	private List<Secret> secrets;
 
-    public Keep() {
-        super();
-        this.secrets = new ArrayList<Secret>();
-        this.roleMap = new RoleMap();
-        roleMap.setKing("user:rod;teller");
-    }
+	public Keep() {
+		super();
+	}
 
-    public Keep(String name) {
-        this();
-        this.name = name;
-    }
+	public Keep(String name) {
+		this();
+		this.name = name;
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @param name
-     *            the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @return the secrets
-     */
-    public List<Secret> getSecrets() {
-        return secrets;
-    }
+	/**
+	 * @return the secrets
+	 */
+	public List<Secret> getSecrets() {
+		return secrets;
+	}
 
-    /**
-     * @param secrets
-     *            the secrets to set
-     */
-    public void setSecrets(List<Secret> secrets) {
-        this.secrets = secrets;
-    }
+	/**
+	 * @param secrets
+	 *            the secrets to set
+	 */
+	public void setSecrets(List<Secret> secrets) {
+		this.secrets = secrets;
+	}
 
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * @param description
-     *            the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * @return the roleMap
-     */
-    public RoleMap getRoleMap() {
-        return roleMap;
-    }
-
-    /**
-     * @param roleMap
-     *            the roleMap to set
-     */
-    public void setRoleMap(RoleMap roleMap) {
-        this.roleMap = roleMap;
-    }
-
+	/**
+	 * @param description
+	 *            the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

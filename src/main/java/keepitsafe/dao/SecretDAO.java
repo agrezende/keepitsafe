@@ -21,9 +21,11 @@ package keepitsafe.dao;
 
 import java.util.List;
 
+import org.springframework.data.repository.CrudRepository;
+
 import keepitsafe.model.Secret;
 
-public interface SecretDAO extends GenericDAO<Secret> {
+public interface SecretDAO extends CrudRepository<Secret, Long> {
 
 	/**
 	 * Find all secrets from a keep

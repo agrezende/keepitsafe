@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Felipe C. do R. P.
+ * Copyright 2016
  *
  * This file is part of Keep It Safe.
  * 
@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package keepitsafe.dao;
+
+import org.springframework.data.repository.CrudRepository;
 
 import keepitsafe.model.Keep;
 
-public interface KeepDAO extends GenericDAO<Keep> {
+public interface KeepDAO extends CrudRepository<Keep, Long> {
 
 	/**
 	 * Get password store by name

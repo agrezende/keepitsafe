@@ -20,6 +20,7 @@
 package keepitsafe.service;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import keepitsafe.dao.KeepDAO;
@@ -50,14 +51,15 @@ public class KeepService {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public @ResponseBody
 	Keep findById(@PathVariable long id) {
-		Keep keep = keepDAO.find(id);
+		Keep keep = keepDAO.findOne(id);
 		return keep;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody
 	List<Keep> findAll() {
-		List<Keep> keeps = keepDAO.findAll();
+		List<Keep> keeps = new ArrayList();
+		keepDAO.findAll().forEach(keeps::add);
 		return keeps;
 	}
 
@@ -67,7 +69,7 @@ public class KeepService {
 		for (Secret sc : keep.getSecrets()) {
 			sc.setKeep(keep);
 		}
-		keep.getRoleMap().setKing("user:" + principal.getName());
+		//keep.getRoleMap().setKing("user:" + principal.getName());
 		
 		keepDAO.save(keep);
 		return keep;
@@ -76,7 +78,7 @@ public class KeepService {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public @ResponseBody
 	Keep create(@PathVariable long id, @RequestBody Keep keep) {
-	    Keep curKeep = keepDAO.find(id);
+	    Keep curKeep = keepDAO.findOne(id);
 	    if(curKeep != null) {
 	        curKeep.setName(keep.getName());
 	        curKeep.setDescription(keep.getDescription());
@@ -87,7 +89,7 @@ public class KeepService {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void remove(@PathVariable long id) {
-		Keep keep = keepDAO.find(id);
+		Keep keep = keepDAO.findOne(id);
 		keepDAO.delete(keep);
 	}
 	
