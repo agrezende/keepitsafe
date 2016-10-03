@@ -16,13 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
-package keepitsafe;
+package keepitsafe.config;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -37,11 +36,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * The Spring configuration
  */
 @Configuration
-@ComponentScan(basePackages = "keepitsafe.service")
-@EnableJpaRepositories("keepitsafe.model")
+@EnableJpaRepositories
 @EnableTransactionManagement
 public class AppConfig {
-
 	@Bean
 	public DataSource dataSource() {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
@@ -52,18 +49,19 @@ public class AppConfig {
 	public EntityManagerFactory entityManagerFactory() {
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		vendorAdapter.setGenerateDdl(true);
+		vendorAdapter.setShowSql(true);
 
 		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+		factory.setJpaVendorAdapter(vendorAdapter);
 		factory.setPackagesToScan("keepitsafe.model");
 		factory.setDataSource(dataSource());
 		factory.afterPropertiesSet();
-
+		
 		return factory.getObject();
 	}
 
 	@Bean
 	public PlatformTransactionManager transactionManager() {
-
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(entityManagerFactory());
 		return txManager;

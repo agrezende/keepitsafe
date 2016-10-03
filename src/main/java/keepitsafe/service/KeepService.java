@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Felipe C. do R. P.
+ * Copyright 2016
  *
  * This file is part of Keep It Safe.
  * 
@@ -23,13 +23,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import keepitsafe.dao.KeepDAO;
-import keepitsafe.dao.SecretDAO;
-import keepitsafe.model.Keep;
-import keepitsafe.model.Secret;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +31,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import keepitsafe.dao.KeepDAO;
+import keepitsafe.dao.SecretDAO;
+import keepitsafe.model.Keep;
+import keepitsafe.model.Secret;
 
 @Controller
 @Transactional
@@ -58,7 +57,7 @@ public class KeepService {
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody
 	List<Keep> findAll() {
-		List<Keep> keeps = new ArrayList();
+		List<Keep> keeps = new ArrayList<>();
 		keepDAO.findAll().forEach(keeps::add);
 		return keeps;
 	}

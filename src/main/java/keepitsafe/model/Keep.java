@@ -45,6 +45,9 @@ public class Keep {
 	@Column
 	private String description;
 
+	@Column(length=10000)
+	private String encryptedKey;
+	
 	@OneToMany(mappedBy = "keep", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	private List<Secret> secrets;
 

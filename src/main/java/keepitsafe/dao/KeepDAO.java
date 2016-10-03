@@ -19,9 +19,11 @@
 package keepitsafe.dao;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import keepitsafe.model.Keep;
 
+@Repository
 public interface KeepDAO extends CrudRepository<Keep, Long> {
 
 	/**

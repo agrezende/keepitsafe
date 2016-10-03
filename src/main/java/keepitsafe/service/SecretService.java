@@ -21,13 +21,7 @@ package keepitsafe.service;
 
 import java.util.List;
 
-import keepitsafe.dao.KeepDAO;
-import keepitsafe.dao.SecretDAO;
-import keepitsafe.model.Keep;
-import keepitsafe.model.Secret;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +29,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import keepitsafe.dao.KeepDAO;
+import keepitsafe.dao.SecretDAO;
+import keepitsafe.model.Keep;
+import keepitsafe.model.Secret;
 
 @Controller
 @Transactional
@@ -53,7 +52,7 @@ public class SecretService {
     }
 
     @RequestMapping(value = "/secret/{id}", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(#id,'info.fcrp.keepitsafe.model.Secret','king')")
+    //@PreAuthorize("hasPermission(#id,'info.fcrp.keepitsafe.model.Secret','king')")
     public @ResponseBody
     Secret findById(@PathVariable long id) {
         Secret secret = secretDAO.findOne(id);

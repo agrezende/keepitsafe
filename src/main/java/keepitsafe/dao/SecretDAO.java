@@ -22,9 +22,11 @@ package keepitsafe.dao;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import keepitsafe.model.Secret;
 
+@Repository
 public interface SecretDAO extends CrudRepository<Secret, Long> {
 
 	/**

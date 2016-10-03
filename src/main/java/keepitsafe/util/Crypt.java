@@ -19,8 +19,6 @@
 
 package keepitsafe.util;
 
-import static org.junit.Assert.assertNotSame;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,12 +26,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.interfaces.PBEKey;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class Crypt {
     private static String password;
@@ -85,7 +78,7 @@ public class Crypt {
         try {  
             cryptCipher.update(plain.getBytes());
             byte[] crypted = cryptCipher.doFinal();
-            byte[] crypted64 = Base64.encodeBase64(crypted);
+            byte[] crypted64 = null;//Base64.encodeBase64(crypted);
             String cryptedString = new String(crypted64);
             return cryptedString;
         } catch (IllegalBlockSizeException e) {
@@ -99,7 +92,7 @@ public class Crypt {
         init();
         
         try {
-            byte[] crypted64 = Base64.decodeBase64(cryptedString);
+            byte[] crypted64 = null;// Base64.decodeBase64(cryptedString);
             decryptCipher.update(crypted64);
             byte[] plain = decryptCipher.doFinal();
             String plainString = new String(plain);

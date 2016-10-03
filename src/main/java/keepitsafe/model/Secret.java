@@ -22,14 +22,10 @@ package keepitsafe.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 /**
  * A password. Nothing else ;)
@@ -39,6 +35,10 @@ import org.hibernate.annotations.TypeDef;
  */
 @Entity
 public class Secret {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
     @Column
     private String name;
 
@@ -49,11 +49,9 @@ public class Secret {
     private String login;
 
     @Column
-    @Type(type = "info.fcrp.keepitsafe.model.PasswordType")
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     private Keep keep;
 
     /**
