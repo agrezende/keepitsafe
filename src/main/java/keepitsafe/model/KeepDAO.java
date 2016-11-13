@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
-package keepitsafe.dao;
+package keepitsafe.model;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import keepitsafe.model.Keep;
 
 @Repository
 public interface KeepDAO extends CrudRepository<Keep, Long> {

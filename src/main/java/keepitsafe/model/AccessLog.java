@@ -1,5 +1,5 @@
 /*
- * Copyright 2016
+ * Copyright (c) 2016 Felipe do Rego Pinto
  *
  * This file is part of Keep It Safe.
  * 
@@ -16,61 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package keepitsafe.model;
 
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
- * A password. Nothing else ;)
+ * Register when a user access a secret
  */
 @Entity
-public class Secret {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-    @Column
-    private String name;
-
-    @Column
-    private String description;
-
-    @Column
-    private String login;
-
-    @Column
-    private String password;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Keep keep;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "secret")
-    private List<AccessLog> logs;
+public class AccessLog {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     
-    public Secret(String name, String login, String password, Keep keep) {
-        super();
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.keep = keep;
-    }
+    @Column
+    private Date date;
+    
+    @ManyToOne
+    @JoinColumn
+    private Secret secret;
+    
+    @ManyToOne
+    @JoinColumn
+    private User user;
 
+    public AccessLog(User user, Secret secret, Date date) {
+        super();
+        this.user = user;
+        this.secret = secret;
+        this.date = date;
+    }
+ 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((keep == null) ? 0 : keep.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((date == null) ? 0 : date.hashCode());
+        result = prime * result + ((secret == null) ? 0 : secret.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
         return result;
     }
 
@@ -82,16 +73,21 @@ public class Secret {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Secret other = (Secret) obj;
-        if (keep == null) {
-            if (other.keep != null)
+        AccessLog other = (AccessLog) obj;
+        if (date == null) {
+            if (other.date != null)
                 return false;
-        } else if (!keep.equals(other.keep))
+        } else if (!date.equals(other.date))
             return false;
-        if (name == null) {
-            if (other.name != null)
+        if (secret == null) {
+            if (other.secret != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!secret.equals(other.secret))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
             return false;
         return true;
     }
@@ -100,28 +96,16 @@ public class Secret {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public Date getDate() {
+        return date;
     }
 
-    public String getDescription() {
-        return description;
+    public Secret getSecret() {
+        return secret;
     }
 
-    public String getLogin() {
-        return login;
+    public User getUser() {
+        return user;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Keep getKeep() {
-        return keep;
-    }
-
-    public List<AccessLog> getLogs() {
-        return logs;
-    }
-
+ 
 }

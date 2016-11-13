@@ -31,7 +31,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
- * A keep is place where secrets can be shared with its members
+ * A keep is place where secrets can be shared, but only with users in the allowed groups
  */
 @Entity
 public class Keep {
@@ -51,57 +51,66 @@ public class Keep {
 	@OneToMany(mappedBy = "keep", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	private List<Secret> secrets;
 
-	public Keep() {
-		super();
-	}
-
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "keep")
+	private List<AccessRight> rights;
+	
 	public Keep(String name) {
-		this();
+		super();
 		this.name = name;
 	}
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+	public Keep(String name, String description) {
+        super();
+        this.name = name;
+        this.description = description;
+    }
 
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
 
-	/**
-	 * @return the secrets
-	 */
-	public List<Secret> getSecrets() {
-		return secrets;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Keep other = (Keep) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        return true;
+    }
 
-	/**
-	 * @param secrets
-	 *            the secrets to set
-	 */
-	public void setSecrets(List<Secret> secrets) {
-		this.secrets = secrets;
-	}
+    public long getId() {
+        return id;
+    }
 
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
+
+    public String getEncryptedKey() {
+        return encryptedKey;
+    }
+
+    public List<Secret> getSecrets() {
+        return secrets;
+    }
+
+    public List<AccessRight> getRights() {
+        return rights;
+    }
 }

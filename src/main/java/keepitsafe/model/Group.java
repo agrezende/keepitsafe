@@ -1,5 +1,5 @@
 /*
- * Copyright 2016
+ * Copyright (c) 2016 Felipe do Rego Pinto
  *
  * This file is part of Keep It Safe.
  * 
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package keepitsafe.model;
 
 import java.util.List;
@@ -27,49 +26,36 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
- * A password. Nothing else ;)
+ * User have Access Rights throught groups
  */
 @Entity
-public class Secret {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
+public class Group {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    
     @Column
     private String name;
-
-    @Column
-    private String description;
-
-    @Column
-    private String login;
-
-    @Column
-    private String password;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Keep keep;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "secret")
-    private List<AccessLog> logs;
     
-    public Secret(String name, String login, String password, Keep keep) {
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
+    private List<User> users;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
+    private List<AccessRight> rights;
+
+    public Group(String name) {
         super();
         this.name = name;
-        this.login = login;
-        this.password = password;
-        this.keep = keep;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((keep == null) ? 0 : keep.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -82,12 +68,7 @@ public class Secret {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Secret other = (Secret) obj;
-        if (keep == null) {
-            if (other.keep != null)
-                return false;
-        } else if (!keep.equals(other.keep))
-            return false;
+        Group other = (Group) obj;
         if (name == null) {
             if (other.name != null)
                 return false;
@@ -96,32 +77,16 @@ public class Secret {
         return true;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public String getDescription() {
-        return description;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public String getLogin() {
-        return login;
+    public List<AccessRight> getRights() {
+        return rights;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Keep getKeep() {
-        return keep;
-    }
-
-    public List<AccessLog> getLogs() {
-        return logs;
-    }
-
+  
 }

@@ -36,9 +36,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * The Spring configuration
  */
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "keepitsafe.model")
 @EnableTransactionManagement
 public class AppConfig {
+    
 	@Bean
 	public DataSource dataSource() {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();

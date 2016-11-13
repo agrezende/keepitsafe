@@ -8,6 +8,10 @@
 	<name>KeepIt Safe</name>
 	<description>A password store facility</description>
 
+	<properties>
+		<jackson.version>2.8.4</jackson.version>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -17,6 +21,26 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.0.RC1</version>
+				<configuration>
+<!-- 					<contextPath>/keepitsafe</contextPath>
+					<stopKey>foo</stopKey>
+ -->
+<!--  					<stopPort>9999</stopPort> -->
+					<scanIntervalSeconds>5</scanIntervalSeconds>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -55,6 +79,12 @@
 			<version>2.3.3</version>
 			<!-- <scope>test</scope> -->
 		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -74,7 +104,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.3.RELEASE</version>
+				<version>4.3.4.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -82,8 +112,8 @@
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-releasetrain</artifactId>
 				<version>Hopper-SR3</version>
-				<scope>import</scope>
 				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

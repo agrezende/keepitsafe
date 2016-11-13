@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import keepitsafe.dao.KeepDAO;
-import keepitsafe.dao.SecretDAO;
 import keepitsafe.model.Keep;
+import keepitsafe.model.KeepDAO;
 import keepitsafe.model.Secret;
+import keepitsafe.model.SecretDAO;
 
 @Controller
 @Transactional
@@ -63,7 +63,7 @@ public class SecretService {
     public @ResponseBody
     Secret create(@PathVariable long keepId, @RequestBody Secret secret) {
         Keep keep = keepDAO.findOne(keepId);
-        secret.setKeep(keep);
+//        secret.setKeep(keep);
         secretDAO.save(secret);
         return secret;
     }
@@ -73,10 +73,10 @@ public class SecretService {
     Secret update(@PathVariable long id, @RequestBody Secret secret) {
         Secret curSecret = secretDAO.findOne(id);
         if (curSecret != null) {
-            curSecret.setName(secret.getName());
-            curSecret.setLogin(secret.getLogin());
-            curSecret.setDescription(secret.getDescription());
-            curSecret.setPassword(secret.getPassword());
+//            curSecret.setName(secret.getName());
+//            curSecret.setLogin(secret.getLogin());
+//            curSecret.setDescription(secret.getDescription());
+//            curSecret.setPassword(secret.getPassword());
             secretDAO.save(curSecret);
         }
         return curSecret;
