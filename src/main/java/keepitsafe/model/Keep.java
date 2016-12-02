@@ -29,11 +29,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * A keep is place where secrets can be shared, but only with users in the allowed groups
  */
 @Entity
+@Table(name = "KEEP")
 public class Keep {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +56,10 @@ public class Keep {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "keep")
 	private List<AccessRight> rights;
 	
+	protected Keep() {
+	    super();
+	}
+
 	public Keep(String name) {
 		super();
 		this.name = name;

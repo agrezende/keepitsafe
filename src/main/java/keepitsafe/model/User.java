@@ -26,9 +26,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * An ordinary user with access to the system
@@ -36,6 +38,7 @@ import javax.persistence.OneToMany;
  * The system access is controlled by pgp, so to login, user must be able to sign a server message
  */
 @Entity
+@Table(name = "USER")
 public class User {
     
     @Id
@@ -43,28 +46,42 @@ public class User {
     private long id;
     
     @Column
-    private String name;
+    private String email;
     
     @Column
     private String publicKey;
     
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable
+    @JoinTable(name = "USER_GRP", 
+        joinColumns = { @JoinColumn(name = "user_id") },
+        inverseJoinColumns = { @JoinColumn(name = "group_id") })
     private List<Group> groups;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<AccessLog> logs;
+
     
-    public User(String name) {
+    protected User() {
         super();
-        this.name = name;
+    }
+    
+    public User(String email) {
+        super();
+        this.email = email;
+    }
+
+    
+    public User(String email, String publicKey) {
+        super();
+        this.email = email;
+        this.publicKey = publicKey;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
         return result;
     }
 
@@ -77,10 +94,10 @@ public class User {
         if (getClass() != obj.getClass())
             return false;
         User other = (User) obj;
-        if (name == null) {
-            if (other.name != null)
+        if (email == null) {
+            if (other.email != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!email.equals(other.email))
             return false;
         return true;
     }
@@ -89,8 +106,8 @@ public class User {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public String getPublicKey() {

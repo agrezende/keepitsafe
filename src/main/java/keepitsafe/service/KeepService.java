@@ -21,7 +21,7 @@ package keepitsafe.service;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -40,7 +39,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import keepitsafe.model.Keep;
 import keepitsafe.model.KeepDAO;
-import keepitsafe.model.Secret;
 import keepitsafe.service.mapper.KeepMapper;
 
 @RestController
@@ -78,7 +76,9 @@ public class KeepService {
      */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<ArrayNode> findAll() {
-        List<Keep> keeps = new ArrayList<>();
+        List<Keep> keeps = new ArrayList<Keep>();
+        Iterator<Keep> keepsIt = keepDAO.findAll().iterator();
+        keepsIt.forEachRemaining(keeps::add);
         ArrayNode keepsJ = KeepMapper.toJson(keeps);
         return new ResponseEntity<ArrayNode>(keepsJ, HttpStatus.OK);
     }
@@ -90,7 +90,7 @@ public class KeepService {
      */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> create(@RequestBody ObjectNode keepJ, Principal principal) {
-        if (keepJ == null || !keepJ.has("name")) {
+        if (keepJ == null || !keepJ.has("name") || !keepJ.has("description")) {
             return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
         }
         

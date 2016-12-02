@@ -24,28 +24,35 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Groups access control list (ACL)
  */
 @Entity
+@Table(name = "RIGHTS")
 public class AccessRight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "groupId")
     private Group group;
     
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "keepId")
     private Keep keep;
     
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "roleId")
     private Role role;
 
+    protected AccessRight() {
+        super();
+    }
+    
     public AccessRight(Group group, Keep keep, Role role) {
         super();
         this.group = group;

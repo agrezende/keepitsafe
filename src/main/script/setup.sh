@@ -16,7 +16,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with Keep It Safe.  If not, see <http://www.gnu.org/licenses/>.
-#
+
 
 curl -i -X POST -H 'Content-Type: application/json' -d '{"name":"Security", "description": "The security team passwords"}' http://localhost:8080/keepitsafe/keep
 curl -i -X POST -H 'Content-Type: application/json' -d '{"name":"srv1", "description": "The first server", "login":"srv1-user", "password":"srv1-passwd"}' http://localhost:8080/keepitsafe/keep/1/secret

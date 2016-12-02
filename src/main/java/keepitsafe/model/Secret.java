@@ -27,13 +27,16 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * A password. Nothing else ;)
  */
 @Entity
+@Table(name = "SECRET")
 public class Secret {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +55,15 @@ public class Secret {
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "keepId")
     private Keep keep;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "secret")
     private List<AccessLog> logs;
+    
+    protected Secret() {
+        super();
+    }
     
     public Secret(String name, String login, String password, Keep keep) {
         super();

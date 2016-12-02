@@ -28,11 +28,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * User have Access Rights throught groups
  */
 @Entity
+@Table(name = "GRP")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +50,10 @@ public class Group {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "group")
     private List<AccessRight> rights;
 
+    protected Group() {
+        super();
+    }
+    
     public Group(String name) {
         super();
         this.name = name;

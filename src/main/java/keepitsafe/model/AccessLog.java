@@ -27,11 +27,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Register when a user access a secret
  */
 @Entity
+@Table(name = "LOG_ACCESS")
 public class AccessLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +43,17 @@ public class AccessLog {
     private Date date;
     
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "secret_id")
     private Secret secret;
     
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
+    protected AccessLog() {
+        super();
+    }
+    
     public AccessLog(User user, Secret secret, Date date) {
         super();
         this.user = user;

@@ -27,11 +27,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * A access role that defines what an user can do inside a keep
  */
 @Entity
+@Table(name = "ROLE")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,10 @@ public class Role {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
     private List<AccessRight> rights;
+    
+    protected Role() {
+        super();
+    }
     
     public Role(String name) {
         super();
