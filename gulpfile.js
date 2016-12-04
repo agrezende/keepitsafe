@@ -16,12 +16,13 @@ var tsc = ts.createProject("tsconfig.json");
  */
 gulp.task("js", function() {
     return gulp.src("app/main.ts")
-            .pipe(sourcemaps.init())
-            .pipe(tsc())
-            .js
-            .pipe(uglify())
-            .pipe(sourcemaps.write())
-            .pipe(gulp.dest("build/app"));
+            .pipe(webpack(require("./webpack.config.js")))
+            //.pipe(sourcemaps.init({loadMaps: true}))
+            //.pipe(uglify())
+            //.pipe(sourcemaps.write())
+            //.pipe(rename("keepitsafe.js"))
+            .pipe(gulp.dest("build/app"))
+            .pipe(browserSync.stream());
 });
 
 /**
@@ -41,9 +42,10 @@ gulp.task("css", function() {
 /**
  * Generate index.html
  */
-gulp.task("index", function() {
+gulp.task("index", ["js", "css"], function() {
     return gulp.src("index.html")
-            .pipe(gulp.dest("build"));
+            .pipe(gulp.dest("build"))
+            .pipe(browserSync.stream());
 });
 
 /**
@@ -58,5 +60,5 @@ gulp.task("start", ["js", "css", "index"], function() {
 
     gulp.watch("app/**/*.ts", ["js"]);
     gulp.watch("css/less/**/*.less", ["css"]);
-    gulp.watch("index.html", ["index", browserSync.reload]);
+    gulp.watch("index.html", ["index"]);//, browserSync.reload]);
 });
