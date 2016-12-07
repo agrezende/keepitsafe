@@ -1,27 +1,33 @@
 
 var gulp = require("gulp");
-var ts = require("gulp-typescript");
-var less = require("gulp-less");
-var sourcemaps = require("gulp-sourcemaps");
-var uglify = require("gulp-uglify");
-var cleanCss = require("gulp-clean-css");
-var rename = require("gulp-rename");
-var browserSync = require("browser-sync").create();
-var webpack = require("webpack-stream");
+var fs = require("fs");
+var gutil = require('gulp-util');
+
+
 var browserify = require("browserify");
-var watchify = require("watchify");
 var tsify = require("tsify");
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var gutil = require('gulp-util');
-var tsc = ts.createProject("tsconfig.json");
-var fs = require("fs");
+
+var less = require("gulp-less");
+var cleanCss = require("gulp-clean-css");
+
+var sourcemaps = require("gulp-sourcemaps");
+var uglify = require("gulp-uglify");
+var rename = require("gulp-rename");
+
+var browserSync = require("browser-sync").create();
+
+// var ts = require("gulp-typescript");
+// var webpack = require("webpack-stream");
+// var watchify = require("watchify");
+// var tsc = ts.createProject("tsconfig.json");
 
 /**
  * load dependencies from package.json
  */
 function loadDependencies() {
-    let packageJson = JSON.parse(fs.readFile("./package.json"));
+    let packageJson = JSON.parse(fs.readFileSync("./package.json"));
     let dependencies = [];
 
     Object.keys(packageJson.dependencies).forEach(function(dependency) {
@@ -32,76 +38,85 @@ function loadDependencies() {
 }
 
 /**
- * Generate javascript
+ * Pack a bundle
  */
-var js = watchify(browserify({
-    debug: true,
-    entries: ['app/main.ts'],
-    cache: {}, 
-    packageCache: {},
-    plugin: [tsify]
-}));
-
-function bundleJs() {
-    return js.bundle()
-            .pipe(source('bundle.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(uglify())
-            .pipe(sourcemaps.write())
-            .pipe(rename("keepitsafe.js"))
-            .pipe(gulp.dest("build/app"))
-            .pipe(browserSync.stream());
+function packBundle(bundle, bundleName) {
+    return bundle
+        .pipe(source(bundleName))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(uglify())
+        .pipe(sourcemaps.write());
 }
-gulp.task("js:watchify", function() {
-    return bundleJs();
+
+/**
+ * Create a bundle with application scripts
+ */
+function bundleApp() {
+    let b = browserify({
+        debug: true,
+        entries: ['app/main.ts'],
+        cache: {}, 
+        packageCache: {} 
+    });
+
+    loadDependencies().forEach(function(dependency) {
+        b = b.external(dependency);
+    });
+
+    return b.plugin([tsify]).bundle();   
+}
+
+/**
+ * Create a bundle with external dependencies
+ */
+function bundleDependencies() {
+    let b = browserify({
+        debug: false,
+        cache: {}, 
+        packageCache: {} 
+    });
+
+    loadDependencies().forEach(function(dependency) {
+        gutil.log(dependency);
+        b = b.require(dependency);
+    });
+
+    return b.plugin([tsify]).bundle();   
+}
+
+/**
+ * Generate application javascript
+ */
+gulp.task("js:app", function() {
+    return packBundle(bundleApp(), "keepitsafe.js")
+        .pipe(gulp.dest("build/app"))
+        .pipe(browserSync.stream());
 });
 
-gulp.task("js:browserify", function() {
-    return browserify({
-                debug: true,
-                entries: ['app/main.ts'],
-                cache: {}, 
-                packageCache: {} 
-            })
-            .plugin([tsify])
-            .bundle()
-            .pipe(source('bundle.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(uglify())
-            .pipe(sourcemaps.write())
-            .pipe(rename("keepitsafe.js"))
-            .pipe(gulp.dest("build/app"))
-            .pipe(browserSync.stream());
+/**
+ * Generate dependencies` javascript
+ */
+gulp.task("js:dep", function() {
+    return packBundle(bundleDependencies(), "dep.js")
+        .pipe(gulp.dest("build/app"))
+        .pipe(browserSync.stream());
 });
 
-var myConfig = Object.create(require("./webpack.config.js"));
-gulp.task("js:webpack", function() {
-    return gulp.src("app/main.ts")
-            .pipe(webpack(myConfig))
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe(uglify())
-            .pipe(sourcemaps.write())
-            .pipe(rename("keepitsafe.js"))
-            .pipe(gulp.dest("build/app"))
-            .pipe(browserSync.stream());
-});
-
-gulp.task("js", ["js:watchify"]);
+gulp.task("js", ["js:app", "js:dep"]);
 
 /**
  * Generate css
  */
 gulp.task("css", function() {
     return gulp.src("css/less/main.less")
-            .pipe(sourcemaps.init())
-            .pipe(less())
-            .pipe(cleanCss())
-            .pipe(sourcemaps.write())
-            .pipe(rename("keepitsafe.css"))
-            .pipe(gulp.dest("build/"))
-            .pipe(browserSync.stream());
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(cleanCss())
+        .pipe(sourcemaps.write())
+        .pipe(rename("keepitsafe.css"))
+        .pipe(gulp.dest("build/"))
+        .pipe(browserSync.stream());
 });
 
 /**
@@ -109,8 +124,8 @@ gulp.task("css", function() {
  */
 gulp.task("html", function() {
     return gulp.src("./**/*.html")
-            .pipe(gulp.dest("build"))
-            .pipe(browserSync.stream());
+        .pipe(gulp.dest("build"))
+        .pipe(browserSync.stream());
 });
 
 /**
@@ -119,13 +134,12 @@ gulp.task("html", function() {
 gulp.task("start", ["js", "css", "html"], function() {
     browserSync.init({
         server: {
-            baseDir: "build/"
+            baseDir: "./build/"
         }
     });
 
-    //js.on('update', bundleJs);
-    //b.on('log', gutil.log);
-    gulp.watch("app/**/*.ts", ["js"]);
-    gulp.watch("css/less/**/*.less", ["css"]);
-    gulp.watch("index.html", ["html"]);//, browserSync.reload]);
+    gulp.watch("app/**/*.ts", {cwd: "./"} , ["js:app"]);
+    gulp.watch("package.json", {cwd: "./"}, ["js:dep"]);
+    gulp.watch("css/less/**/*.less", {cwd: "./"}, ["css"]);
+    gulp.watch("**/*.html", {cwd: "./"}, ["html"]);
 });
