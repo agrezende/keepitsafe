@@ -3,11 +3,11 @@ var gulp = require("gulp");
 var fs = require("fs");
 var gutil = require('gulp-util');
 
-
 var browserify = require("browserify");
 var tsify = require("tsify");
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+var resolve = require('resolve');
 
 var less = require("gulp-less");
 var cleanCss = require("gulp-clean-css");
@@ -42,10 +42,11 @@ function loadDependencies() {
  */
 function packBundle(bundle, bundleName) {
     return bundle
+        .on("error", gutil.log)
         .pipe(source(bundleName))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(sourcemaps.write());
 }
 
@@ -55,7 +56,7 @@ function packBundle(bundle, bundleName) {
 function bundleApp() {
     let b = browserify({
         debug: true,
-        entries: ['app/main.ts'],
+        entries: ['./src/main/js/main.ts'],
         cache: {}, 
         packageCache: {} 
     });
@@ -73,13 +74,19 @@ function bundleApp() {
 function bundleDependencies() {
     let b = browserify({
         debug: false,
+        entries: ['./src/main/js/extra.ts'],
         cache: {}, 
         packageCache: {} 
     });
 
     loadDependencies().forEach(function(dependency) {
-        gutil.log(dependency);
-        b = b.require(dependency);
+        let path = resolve.sync(dependency);
+
+        if (dependency == "zone.js") {
+            path = "./node_modules/zone.js/dist/zone.js";
+        }
+        
+        b = b.require(path, { expose: dependency });
     });
 
     return b.plugin([tsify]).bundle();   
@@ -90,7 +97,7 @@ function bundleDependencies() {
  */
 gulp.task("js:app", function() {
     return packBundle(bundleApp(), "keepitsafe.js")
-        .pipe(gulp.dest("build/app"))
+        .pipe(gulp.dest("./target/dist"))
         .pipe(browserSync.stream());
 });
 
@@ -99,7 +106,7 @@ gulp.task("js:app", function() {
  */
 gulp.task("js:dep", function() {
     return packBundle(bundleDependencies(), "dep.js")
-        .pipe(gulp.dest("build/app"))
+        .pipe(gulp.dest("./target/dist"))
         .pipe(browserSync.stream());
 });
 
@@ -109,13 +116,13 @@ gulp.task("js", ["js:app", "js:dep"]);
  * Generate css
  */
 gulp.task("css", function() {
-    return gulp.src("css/less/main.less")
+    return gulp.src("./src/main/less/main.less")
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(cleanCss())
         .pipe(sourcemaps.write())
         .pipe(rename("keepitsafe.css"))
-        .pipe(gulp.dest("build/"))
+        .pipe(gulp.dest("./target/dist"))
         .pipe(browserSync.stream());
 });
 
@@ -123,8 +130,8 @@ gulp.task("css", function() {
  * Generate index.html
  */
 gulp.task("html", function() {
-    return gulp.src("./**/*.html")
-        .pipe(gulp.dest("build"))
+    return gulp.src("./src/main/js/**/*.html")
+        .pipe(gulp.dest("./target/dist"))
         .pipe(browserSync.stream());
 });
 
@@ -134,12 +141,12 @@ gulp.task("html", function() {
 gulp.task("start", ["js", "css", "html"], function() {
     browserSync.init({
         server: {
-            baseDir: "./build/"
+            baseDir: "./target/dist"
         }
     });
 
-    gulp.watch("app/**/*.ts", {cwd: "./"} , ["js:app"]);
-    gulp.watch("package.json", {cwd: "./"}, ["js:dep"]);
-    gulp.watch("css/less/**/*.less", {cwd: "./"}, ["css"]);
-    gulp.watch("**/*.html", {cwd: "./"}, ["html"]);
+    gulp.watch([ "src/main/js/**/*.ts" , "!./src/main/js/extra.ts"], {cwd: "./"} , ["js:app"]);
+    gulp.watch([ "./package.json", "./src/main/js/extra.ts" ], {cwd: "./"}, ["js:dep"]);
+    gulp.watch("src/main/less/**/*.less", {cwd: "./"}, ["css"]);
+    gulp.watch("src/main/js/**/*.html", {cwd: "./"}, ["html"]);
 });
